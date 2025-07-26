@@ -1,40 +1,115 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display&family=Poppins:wght@400;600&display=swap');
 
-/* Import Google Fonts - 'Playfair Display' pro nadpisy, 'Inter' pro zbytek */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap');
-
-:root {
-  --foreground-rgb: 34, 34, 34; /* Tmavší text */
-  --background-rgb: 245, 245, 245; /* Velmi světle šedé pozadí */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff8f0;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  line-height: 1.6;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 230, 230, 230; /* Světlejší text pro tmavý režim */
-    --background-rgb: 18, 18, 18; /* Tmavé pozadí */
+main {
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.hero {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.logo {
+  width: 120px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  margin: 0;
+  color: #e07050;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  color: #555;
+}
+
+.menu {
+  margin-top: 3rem;
+}
+
+.menu h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.menu-item {
+  background: #ffffff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.menu-item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-bottom: 1rem;
+}
+
+.menu-item h3 {
+  margin: 0.5rem 0;
+  color: #e07050;
+}
+
+.contact {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+.contact h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero h1 {
+    font-size: 2.8rem;
+  }
+
+  .hero p {
+    font-size: 1.2rem;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background-color: rgb(var(--background-rgb));
-  font-family: 'Inter', sans-serif;
-  transition: background-color 0.5s ease-in-out, color 0.5s ease-in-out;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden; /* Zabrání horizontálnímu scrollování */
-}
+@media (min-width: 960px) {
+  .menu-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', serif; /* Použijeme Playfair Display pro nadpisy */
-  font-weight: 700;
-  line-height: 1.2;
-  color: inherit;
-}
+  .logo {
+    width: 140px;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
+  .hero h1 {
+    font-size: 3.2rem;
+  }
 }
