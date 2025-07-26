@@ -1,26 +1,42 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --foreground-rgb: 0, 0, 0; /* Černá barva pro text */
+  --background-start-rgb: 240, 240, 240; /* Světle šedé pozadí nahoře */
+  --background-end-rgb: 255, 255, 255; /* Bílé pozadí dole */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground-rgb: 255, 255, 255; /* Bílá barva pro text v tmavém režimu */
+    --background-start-rgb: 0, 0, 0; /* Černé pozadí nahoře v tmavém režimu */
+    --background-end-rgb: 0, 0, 0; /* Černé pozadí dole v tmavém režimu */
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* Přidáme nějaké základní styly pro odkazy, aby nebyly modré a podtržené */
+a {
+  color: inherit; /* Odkazy zdědí barvu textu */
+  text-decoration: none; /* Odstraní podtržení */
+}
+
+a:hover {
+  opacity: 0.8; /* Mírné ztmavení při najetí myší */
+}
+
+/* Případné další globální styly */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600; /* Silnější nadpisy */
 }
