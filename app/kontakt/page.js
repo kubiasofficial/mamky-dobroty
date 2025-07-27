@@ -8,7 +8,7 @@ export default function Kontakt() {
       <header className="header">
         <div className="header-content">
           <div className="logo">
-            <h2>Mamky Dobroty</h2>
+            <h2>Dobroty od mamky</h2>
           </div>
           <nav className="navigation">
             <Link href="/" className="nav-link">Domů</Link>

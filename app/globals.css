@@ -57,6 +57,9 @@ html {
   border-radius: 8px;
   transition: all 0.3s ease;
   font-size: clamp(0.9rem, 2vw, 1rem);
+  background: transparent; /* Přidejte toto */
+  border: none; /* Přidejte toto */
+  cursor: pointer; /* Přidejte toto */
 }
 
 .nav-link:hover {
