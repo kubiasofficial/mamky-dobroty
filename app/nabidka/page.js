@@ -14,46 +14,63 @@ export default function Nabidka() {
     slane: [
       {
         id: 1,
-        name: "Slané koláče",
-        description: "S pórkem, sýrem a šunkou.",
-        price: "od 380 Kč",
-        priceNum: 380,
-        image: "/product-savory.jpg"
+        name: "Chlebíčky sešité",
+        description: "Tradiční chlebíčky s různými náplněmi.",
+        price: "od 35 Kč/kus",
+        priceNum: 35,
+        image: "/chlebickysesitym.jpg"
       },
       {
         id: 2,
-        name: "Quiche",
-        description: "Francouzský slaný koláč s různými náplněmi.",
-        price: "od 420 Kč",
-        priceNum: 420,
-        image: "/product-quiche.jpg"
-      }
-    ],
-    sladke: [
+        name: "Obložené croissanty",
+        description: "Křupavé croissanty s lahodnou náplní.",
+        price: "od 45 Kč/kus",
+        priceNum: 45,
+        image: "/Oblozecroissanty-1.jpg"
+      },
       {
         id: 3,
-        name: "Ovocný dort",
-        description: "Lehký krém, piškot a čerstvé ovoce.",
-        price: "od 450 Kč",
-        priceNum: 450,
-        image: "/product-cake.jpg"
+        name: "Obložená mísa",
+        description: "Pestré obložené mísy pro různé příležitosti.",
+        price: "od 350 Kč",
+        priceNum: 350,
+        image: "/Oblozenamisa-1.jpg"
       },
       {
         id: 4,
-        name: "Plněné rohlíčky",
-        description: "Na sladko – ideální na oslavy.",
-        price: "7 Kč / kus",
-        priceNum: 7,
-        image: "/product-croissant.jpg"
+        name: "Obložené bulky",
+        description: "Čerstvé bulky s chutnou náplní.",
+        price: "od 40 Kč/kus",
+        priceNum: 40,
+        image: "/Oblozebulky-1.jpg"
       },
       {
         id: 5,
-        name: "Makronky",
-        description: "Křehké, barevné a plné chuti.",
-        price: "15 Kč / kus",
-        priceNum: 15,
-        image: "/product-macarons.jpg"
+        name: "Obložený talíř s lamenem",
+        description: "Elegantní obložené talíře pro speciální příležitosti.",
+        price: "od 280 Kč",
+        priceNum: 280,
+        image: "/oblozenytalirsselamem.jpg"
+      },
+      {
+        id: 6,
+        name: "Pekárna pozadí",
+        description: "Čerstvé pečivo a speciality z naší pekárny.",
+        price: "od 25 Kč/kus",
+        priceNum: 25,
+        image: "/pekarna-pozadi.jpg"
+      },
+      {
+        id: 7,
+        name: "Plněné rohlíky",
+        description: "Měkké rohlíky s různými slanými náplněmi.",
+        price: "od 30 Kč/kus",
+        priceNum: 30,
+        image: "/plnenerolky.jpg"
       }
+    ],
+    sladke: [
+      // Prozatím prázdné - můžeme přidat později
     ]
   };
 
@@ -128,7 +145,7 @@ export default function Nabidka() {
       <header className="header">
         <div className="header-content">
           <div className="logo">
-            <h2>Mamky Dobroty</h2>
+            <h2>Dobroty od mamky</h2>
           </div>
           <nav className="navigation">
             <Link href="/" className="nav-link">Domů</Link>
@@ -250,22 +267,28 @@ export default function Nabidka() {
               </button>
             </div>
             
-            <div className="menu-grid">
-              {products[selectedCategory].map(product => (
-                <div key={product.id} className="menu-item">
-                  <Image src={product.image} alt={product.name} width={300} height={200} />
-                  <h3>{product.name}</h3>
-                  <p>{product.description}</p>
-                  <p><strong>{product.price}</strong></p>
-                  <button 
-                    onClick={() => addToCart(product)}
-                    className="add-to-cart-btn"
-                  >
-                    Přidat do košíku
-                  </button>
-                </div>
-              ))}
-            </div>
+            {selectedCategory === 'sladke' && products.sladke.length === 0 ? (
+              <div className="empty-category">
+                <p>Sladké dobroty budou brzy k dispozici! 🍰</p>
+              </div>
+            ) : (
+              <div className="menu-grid">
+                {products[selectedCategory].map(product => (
+                  <div key={product.id} className="menu-item">
+                    <Image src={product.image} alt={product.name} width={300} height={200} />
+                    <h3>{product.name}</h3>
+                    <p>{product.description}</p>
+                    <p><strong>{product.price}</strong></p>
+                    <button 
+                      onClick={() => addToCart(product)}
+                      className="add-to-cart-btn"
+                    >
+                      Přidat do košíku
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </section>
         )}
       </main>
