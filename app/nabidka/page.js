@@ -18,7 +18,7 @@ export default function Nabidka() {
         description: "Tradiční chlebíčky s různými náplněmi.",
         price: "od 35 Kč/kus",
         priceNum: 35,
-        image: "/chlebickysesitym.jpg"
+        image: "/chlebicky.jpg"
       },
       {
         id: 2,
@@ -26,7 +26,7 @@ export default function Nabidka() {
         description: "Křupavé croissanty s lahodnou náplní.",
         price: "od 45 Kč/kus",
         priceNum: 45,
-        image: "/Oblozecroissanty-1.jpg"
+        image: "/croissanty.jpg"
       },
       {
         id: 3,
@@ -34,7 +34,7 @@ export default function Nabidka() {
         description: "Pestré obložené mísy pro různé příležitosti.",
         price: "od 350 Kč",
         priceNum: 350,
-        image: "/Oblozenamisa-1.jpg"
+        image: "/misa.jpg"
       },
       {
         id: 4,
@@ -42,7 +42,7 @@ export default function Nabidka() {
         description: "Čerstvé bulky s chutnou náplní.",
         price: "od 40 Kč/kus",
         priceNum: 40,
-        image: "/Oblozebulky-1.jpg"
+        image: "/bulky.jpg"
       },
       {
         id: 5,
@@ -50,7 +50,7 @@ export default function Nabidka() {
         description: "Elegantní obložené talíře pro speciální příležitosti.",
         price: "od 280 Kč",
         priceNum: 280,
-        image: "/oblozenytalirsselamem.jpg"
+        image: "/talir.jpg"
       },
       {
         id: 6,
@@ -58,7 +58,7 @@ export default function Nabidka() {
         description: "Měkké rohlíky s různými slanými náplněmi.",
         price: "od 30 Kč/kus",
         priceNum: 30,
-        image: "/plnenerolky.jpg"
+        image: "/rohliky.jpg"
       }
     ],
     sladke: []
