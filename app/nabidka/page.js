@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -57,6 +57,23 @@ export default function Nabidka() {
     ]
   };
 
+  // Načtení košíku z localStorage při načtení komponenty
+  useEffect(() => {
+    const savedCart = localStorage.getItem('mamky-cart');
+    if (savedCart) {
+      try {
+        setCart(JSON.parse(savedCart));
+      } catch (error) {
+        console.error('Chyba při načítání košíku:', error);
+      }
+    }
+  }, []);
+
+  // Uložení košíku do localStorage při každé změně
+  useEffect(() => {
+    localStorage.setItem('mamky-cart', JSON.stringify(cart));
+  }, [cart]);
+
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     setShowModal(false);
@@ -95,6 +112,11 @@ export default function Nabidka() {
           : item
       ));
     }
+  };
+
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem('mamky-cart');
   };
 
   const getTotalItems = () => {
@@ -195,11 +217,21 @@ export default function Nabidka() {
                   
                   <div className="cart-footer">
                     <p><strong>Celkem položek: {getTotalItems()}</strong></p>
-                    <Link href={`/objednavka?cart=${encodeURIComponent(JSON.stringify(cart))}`}>
-                      <button className="order-btn">
-                        Dokončit poptávku
+                    
+                    <div className="cart-actions">
+                      <button 
+                        onClick={clearCart}
+                        className="clear-cart-btn"
+                      >
+                        Vymazat košík
                       </button>
-                    </Link>
+                      
+                      <Link href={`/objednavka?cart=${encodeURIComponent(JSON.stringify(cart))}`}>
+                        <button className="order-btn">
+                          Dokončit poptávku
+                        </button>
+                      </Link>
+                    </div>
                   </div>
                 </>
               )}

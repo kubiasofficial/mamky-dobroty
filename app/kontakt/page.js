@@ -21,9 +21,10 @@ export default function Kontakt() {
       <main>
         <section className="contact">
           <h2>Kontakt</h2>
-          <p><strong>Telefon:</strong> +420 123 456 789</p>
-          <p><strong>Email:</strong> mamka@dobroty.cz</p>
-          <p><strong>Místo:</strong> Liberec a okolí</p>
+          <p><strong>Telefon:</strong> +420 605 198 143</p>
+          <p><strong>Email:</strong> suslice1@seznam.cz</p>
+          <p><strong>Místo:</strong> Rychnov nad Kněžnou</p>
+          <p><strong>Adresa:</strong> Jirsákova 1802, Rychnov nad Kněžnou</p>
         </section>
       </main>
     </>
