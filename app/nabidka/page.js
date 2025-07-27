@@ -54,14 +54,6 @@ export default function Nabidka() {
       },
       {
         id: 6,
-        name: "Pekárna pozadí",
-        description: "Čerstvé pečivo a speciality z naší pekárny.",
-        price: "od 25 Kč/kus",
-        priceNum: 25,
-        image: "/pekarna-pozadi.jpg"
-      },
-      {
-        id: 7,
         name: "Plněné rohlíky",
         description: "Měkké rohlíky s různými slanými náplněmi.",
         price: "od 30 Kč/kus",
@@ -69,9 +61,7 @@ export default function Nabidka() {
         image: "/plnenerolky.jpg"
       }
     ],
-    sladke: [
-      // Prozatím prázdné - můžeme přidat později
-    ]
+    sladke: []
   };
 
   // Načtení košíku z localStorage při načtení komponenty
