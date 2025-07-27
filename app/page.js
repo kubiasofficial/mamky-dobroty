@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Home() {
@@ -66,28 +65,12 @@ export default function Home() {
           <p>Domácí slané výtvory s láskou – na zakázku</p>
         </section>
 
-        <section className="menu">
-          <h2>Nabídka</h2>
-          <div className="menu-grid">
-            <div className="menu-item">
-              <Image src="/product-cake.jpg" alt="Ovocný dort" width={300} height={200} />
-              <h3>Ovocný dort</h3>
-              <p>Lehký krém, piškot a čerstvé ovoce.</p>
-              <p>od 450 Kč</p>
-            </div>
-            <div className="menu-item">
-              <Image src="/product-croissant.jpg" alt="Plněné rohlíčky" width={300} height={200} />
-              <h3>Plněné rohlíčky</h3>
-              <p>Na sladko i na slano – ideální na oslavy.</p>
-              <p>7 Kč / kus</p>
-            </div>
-            <div className="menu-item">
-              <Image src="/product-macarons.jpg" alt="Makronky" width={300} height={200} />
-              <h3>Makronky</h3>
-              <p>Křehké, barevné a plné chuti.</p>
-              <p>15 Kč / kus</p>
-            </div>
-          </div>
+        <section className="contact">
+          <h2>Kontakt</h2>
+          <p><strong>Telefon:</strong> +420 605 198 143</p>
+          <p><strong>Email:</strong> suslice1@seznam.cz</p>
+          <p><strong>Místo:</strong> Rychnov nad Kněžnou</p>
+          <p><strong>Adresa:</strong> Jirsákova 1802, Rychnov nad Kněžnou</p>
         </section>
       </main>
     </>
