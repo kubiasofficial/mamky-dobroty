@@ -14,16 +14,16 @@ export default function Nabidka() {
     slane: [
       {
         id: 1,
-        name: "Chlebíčky sešité",
-        description: "Tradiční chlebíčky s různými náplněmi.",
-        price: "od 35 Kč/kus",
-        priceNum: 35,
+        name: "Obložené chlebíčky",
+        description: "Tradiční chlebíčky na různé styly.",
+        price: "od 55 Kč/kus",
+        priceNum: 55,
         image: "/chlebicky.jpeg"
       },
       {
         id: 2,
         name: "Obložené croissanty",
-        description: "Křupavé croissanty s lahodnou náplní.",
+        description: "Křupavé croissanty na každou příležitost.",
         price: "od 45 Kč/kus",
         priceNum: 45,
         image: "/croissanty.jpeg"
