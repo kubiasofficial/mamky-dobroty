@@ -62,7 +62,7 @@ export default function Home() {
       name: "Vaječná-Tlačenka",
       description: "Domácí vaječná tlačenka podle tradiční receptury",
       price: "od 350 Kč",
-      image: "/vajec-tlacenka.jpeg", // ✅ OPRAVENO
+      image: "/vajec-tlacenka.jpeg",  // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -70,7 +70,7 @@ export default function Home() {
       name: "Masový Sulc",
       description: "Tradiční masový sulc z kvalitních surovin",
       price: "od 400 Kč",
-      image: "/masovy-sulc.jpeg", // ✅ OPRAVENO
+      image: "/masovy-sulc.jpeg",     // ✅ OPRAVENO
       category: "slane"
     }
   ];
