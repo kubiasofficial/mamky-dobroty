@@ -6,6 +6,8 @@ import Link from 'next/link';
 
 export default function Home() {
   const [currentProductIndex, setCurrentProductIndex] = useState(0);
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminPin, setAdminPin] = useState('');
 
   // Produkty pro prezentaci (mix slaných a sladkých)
   const featuredProducts = [
@@ -88,6 +90,15 @@ export default function Home() {
 
   const currentProduct = featuredProducts[currentProductIndex];
 
+  const handleAdminLogin = () => {
+    if (adminPin === '2811') {
+      window.location.href = '/admin';
+    } else {
+      alert('Špatný PIN!');
+      setAdminPin('');
+    }
+  };
+
   return (
     <>
       <header className="header">
@@ -99,9 +110,41 @@ export default function Home() {
             <Link href="/" className="nav-link active">Domů</Link>
             <Link href="/nabidka" className="nav-link">Nabídka</Link>
             <Link href="/kontakt" className="nav-link">Kontakt</Link>
+            
+            {/* ✅ NOVÉ ADMIN TLAČÍTKO */}
+            <button 
+              onClick={() => setShowAdminModal(true)}
+              className="admin-btn"
+              title="Správa webu"
+            >
+              🔑
+            </button>
           </nav>
         </div>
       </header>
+
+      {/* ✅ ADMIN MODAL */}
+      {showAdminModal && (
+        <div className="modal-overlay">
+          <div className="admin-modal">
+            <h3>Příhlášení správce webu</h3>
+            <input
+              type="password"
+              placeholder="Zadejte PIN"
+              value={adminPin}
+              onChange={(e) => setAdminPin(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+            />
+            <div className="admin-buttons">
+              <button onClick={handleAdminLogin}>Přihlásit</button>
+              <button onClick={() => {
+                setShowAdminModal(false);
+                setAdminPin('');
+              }}>Zrušit</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <main>
         <section className="hero">

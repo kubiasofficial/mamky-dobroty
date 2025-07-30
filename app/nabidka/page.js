@@ -9,6 +9,8 @@ export default function Nabidka() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
+  const [adminPin, setAdminPin] = useState('');
 
   const products = {
     slane: [
@@ -170,6 +172,15 @@ export default function Nabidka() {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const handleAdminLogin = () => {
+    if (adminPin === '2811') {
+      window.location.href = '/admin';
+    } else {
+      alert('Špatný PIN!');
+      setAdminPin('');
+    }
+  };
+
   return (
     <>
       <header className="header">
@@ -188,9 +199,41 @@ export default function Nabidka() {
             >
               🛒 Košík ({getTotalItems()})
             </button>
+
+            {/* ✅ ADMIN TLAČÍTKO */}
+            <button 
+              onClick={() => setShowAdminModal(true)}
+              className="admin-btn"
+              title="Správa webu"
+            >
+              🔑
+            </button>
           </nav>
         </div>
       </header>
+
+      {/* ✅ ADMIN MODAL */}
+      {showAdminModal && (
+        <div className="modal-overlay">
+          <div className="admin-modal">
+            <h3>Příhlášení správce webu</h3>
+            <input
+              type="password"
+              placeholder="Zadejte PIN"
+              value={adminPin}
+              onChange={(e) => setAdminPin(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+            />
+            <div className="admin-buttons">
+              <button onClick={handleAdminLogin}>Přihlásit</button>
+              <button onClick={() => {
+                setShowAdminModal(false);
+                setAdminPin('');
+              }}>Zrušit</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <div className="modal-overlay">
