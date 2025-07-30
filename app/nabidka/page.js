@@ -46,7 +46,7 @@ export default function Nabidka() {
       },
       {
         id: 5,
-        name: "Obložený talíř ",
+        name: "Obložený talíř",
         description: "Elegantní obložené talíře pro speciální příležitosti.",
         price: "od 280 Kč",
         priceNum: 280,
@@ -67,6 +67,38 @@ export default function Nabidka() {
         price: "od 480 Kč",
         priceNum: 480,
         image: "/slanydort.jpeg"
+      },
+      {
+        id: 8,
+        name: "Obložené bagety",
+        description: "Čerstvé bagety s chutnou náplní na každou příležitost.",
+        price: "od 55 Kč/kus",
+        priceNum: 55,
+        image: "/bagety.jpeg"
+      },
+      {
+        id: 9,
+        name: "Vajíčka trochu jinak",
+        description: "Kreativní úprava vajíček podle našich receptů.",
+        price: "60 Kč/kus",
+        priceNum: 60,
+        image: "/vajicka.jpeg"
+      },
+      {
+        id: 10,
+        name: "Vaječná-Tlačenka",
+        description: "Domácí vaječná tlačenka podle tradiční receptury.",
+        price: "od 350 Kč",
+        priceNum: 350,
+        image: "/vajec-tlacenka.jpeg"
+      },
+      {
+        id: 11,
+        name: "Masový Sulc",
+        description: "Tradiční masový sulc z kvalitních surovin.",
+        price: "od 400 Kč",
+        priceNum: 400,
+        image: "/masovy-sulc.jpeg"
       }
     ],
     sladke: []
