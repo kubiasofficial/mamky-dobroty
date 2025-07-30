@@ -11,8 +11,8 @@ export default function Home() {
   const featuredProducts = [
     {
       id: 1,
-      name: "Chlebíčky sešité",
-      description: "Tradiční chlebíčky s různými náplněmi",
+      name: "Obložené chlebíčky",
+      description: "Výběr druhů a množství je dle přání zákazníka",
       price: "od 35 Kč/kus",
       image: "/chlebicky.jpeg",
       category: "slane"
@@ -29,7 +29,7 @@ export default function Home() {
       id: 3,
       name: "Obložené croissanty",
       description: "Křupavé croissanty s lahodnou náplní",
-      price: "od 45 Kč/kus",
+      price: "od 55 Kč/kus",
       image: "/croissanty.jpeg",
       category: "slane"
     },

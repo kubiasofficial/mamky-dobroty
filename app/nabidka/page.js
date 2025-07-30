@@ -16,16 +16,16 @@ export default function Nabidka() {
         id: 1,
         name: "Obložené chlebíčky",
         description: "Tradiční chlebíčky na různé styly.",
-        price: "od 55 Kč/kus",
-        priceNum: 55,
+        price: "od 35 Kč/kus",
+        priceNum: 35,
         image: "/chlebicky.jpeg"
       },
       {
         id: 2,
         name: "Obložené croissanty",
         description: "Křupavé croissanty na každou příležitost.",
-        price: "od 45 Kč/kus",
-        priceNum: 45,
+        price: "od 55 Kč/kus",
+        priceNum: 55,
         image: "/croissanty.jpeg"
       },
       {
@@ -46,7 +46,7 @@ export default function Nabidka() {
       },
       {
         id: 5,
-        name: "Obložený talíř s lamenem",
+        name: "Obložený talíř ",
         description: "Elegantní obložené talíře pro speciální příležitosti.",
         price: "od 280 Kč",
         priceNum: 280,
@@ -54,8 +54,8 @@ export default function Nabidka() {
       },
       {
         id: 6,
-        name: "Plněné rohlíky",
-        description: "Měkké rohlíky s různými slanými náplněmi.",
+        name: "Párečky v listovém těstě",
+        description: "Křupávé párečky v listovém těstě.",
         price: "od 30 Kč/kus",
         priceNum: 30,
         image: "/rohliky.jpeg"
@@ -63,7 +63,7 @@ export default function Nabidka() {
       {
         id: 7,
         name: "Slaný dort",
-        description: "Speciální slaný dort pro větší akce.",
+        description: "Speciální slaný dort pro větší akce. Ceny jsou indviduální dle velikosti a nálně a surovin",
         price: "od 480 Kč",
         priceNum: 480,
         image: "/slanydort.jpeg"
