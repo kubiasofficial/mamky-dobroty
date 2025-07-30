@@ -11,8 +11,8 @@ export default function Home() {
   const featuredProducts = [
     {
       id: 1,
-      name: "Obložené chlebíčky",
-      description: "Výběr druhů a množství je dle přání zákazníka",
+      name: "Chlebíčky sešité",
+      description: "Tradiční chlebíčky s různými náplněmi",
       price: "od 35 Kč/kus",
       image: "/chlebicky.jpeg",
       category: "slane"
@@ -39,6 +39,38 @@ export default function Home() {
       description: "Speciální slaný dort pro větší akce",
       price: "od 480 Kč",
       image: "/slanydort.jpeg",
+      category: "slane"
+    },
+    {
+      id: 8,
+      name: "Obložené bagety",
+      description: "Čerstvé bagety s chutnou náplní",
+      price: "od 55 Kč/kus",
+      image: "/bagety.jpeg",
+      category: "slane"
+    },
+    {
+      id: 9,
+      name: "Vajíčka trochu jinak",
+      description: "Kreativní úprava vajíček podle našich receptů",
+      price: "60 Kč/kus",
+      image: "/vajicka.jpeg",
+      category: "slane"
+    },
+    {
+      id: 10,
+      name: "Vaječná-Tlačenka",
+      description: "Domácí vaječná tlačenka podle tradiční receptury",
+      price: "od 350 Kč",
+      image: "/vajec-tlacenka.jpeg",
+      category: "slane"
+    },
+    {
+      id: 11,
+      name: "Masový Sulc",
+      description: "Tradiční masový sulc z kvalitních surovin",
+      price: "od 400 Kč",
+      image: "/masovy-sulc.jpeg",
       category: "slane"
     }
   ];
