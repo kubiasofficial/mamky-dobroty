@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "mamky-dobroty-web",
   "version": "0.1.0",
   "private": true,
@@ -9,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "firebase": "^12.0.0",
     "next": "15.4.4",
     "react": "19.1.0",
     "react-dom": "19.1.0"

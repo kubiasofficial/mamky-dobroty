@@ -3,108 +3,16 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useProducts } from '../../lib/useProducts';
 
 export default function Nabidka() {
+  const { products, loading } = useProducts();
   const [showModal, setShowModal] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
   const [showAdminModal, setShowAdminModal] = useState(false);
   const [adminPin, setAdminPin] = useState('');
-
-  const products = {
-    slane: [
-      {
-        id: 1,
-        name: "Obložené chlebíčky",
-        description: "Tradiční chlebíčky na různé styly.",
-        price: "od 35 Kč/kus",
-        priceNum: 35,
-        image: "/chlebicky.jpeg"
-      },
-      {
-        id: 2,
-        name: "Obložené croissanty",
-        description: "Křupavé croissanty na každou příležitost.",
-        price: "od 55 Kč/kus",
-        priceNum: 55,
-        image: "/croissanty.jpeg"
-      },
-      {
-        id: 3,
-        name: "Obložená mísa",
-        description: "Pestré obložené mísy pro různé příležitosti.",
-        price: "od 350 Kč",
-        priceNum: 350,
-        image: "/misa.jpeg"
-      },
-      {
-        id: 4,
-        name: "Obložené bulky",
-        description: "Čerstvé bulky s chutnou náplní.",
-        price: "od 40 Kč/kus",
-        priceNum: 40,
-        image: "/bulky.jpeg"
-      },
-      {
-        id: 5,
-        name: "Obložený talíř",
-        description: "Elegantní obložené talíře pro speciální příležitosti.",
-        price: "od 280 Kč",
-        priceNum: 280,
-        image: "/talir.jpeg"
-      },
-      {
-        id: 6,
-        name: "Párečky v listovém těstě",
-        description: "Křupávé párečky v listovém těstě.",
-        price: "od 30 Kč/kus",
-        priceNum: 30,
-        image: "/rohliky.jpeg"
-      },
-      {
-        id: 7,
-        name: "Slaný dort",
-        description: "Speciální slaný dort pro větší akce. Ceny jsou indviduální dle velikosti a nálně a surovin",
-        price: "od 480 Kč",
-        priceNum: 480,
-        image: "/slanydort.jpeg"
-      },
-      {
-        id: 8,
-        name: "Obložené bagety",
-        description: "Čerstvé bagety s chutnou náplní na každou příležitost.",
-        price: "od 55 Kč/kus",
-        priceNum: 55,
-        image: "/bagety.jpeg"
-      },
-      {
-        id: 9,
-        name: "Vajíčka trochu jinak",
-        description: "Kreativní úprava vajíček podle našich receptů.",
-        price: "60 Kč/kus",
-        priceNum: 60,
-        image: "/vajicka.jpeg"
-      },
-      {
-        id: 10,
-        name: "Vaječná-Tlačenka",
-        description: "Domácí vaječná tlačenka podle tradiční receptury.",
-        price: "od 350 Kč",
-        priceNum: 350,
-        image: "/vajec-tlacenka.jpeg"
-      },
-      {
-        id: 11,
-        name: "Masový Sulc",
-        description: "Tradiční masový sulc z kvalitních surovin.",
-        price: "od 400 Kč",
-        priceNum: 400,
-        image: "/masovy-sulc.jpeg"
-      }
-    ],
-    sladke: []
-  };
 
   // Načtení košíku z localStorage při načtení komponenty
   useEffect(() => {
@@ -180,6 +88,14 @@ export default function Nabidka() {
       setAdminPin('');
     }
   };
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '4rem' }}>
+        <h2>Načítání nabídky...</h2>
+      </div>
+    );
+  }
 
   return (
     <>

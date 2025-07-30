@@ -111,7 +111,7 @@ export default function Home() {
             <Link href="/nabidka" className="nav-link">Nabídka</Link>
             <Link href="/kontakt" className="nav-link">Kontakt</Link>
             
-            {/* ✅ NOVÉ ADMIN TLAČÍTKO */}
+            {/* ✅ ADMIN TLAČÍTKO */}
             <button 
               onClick={() => setShowAdminModal(true)}
               className="admin-btn"

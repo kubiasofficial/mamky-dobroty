@@ -1,54 +1,56 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useProducts } from '../../lib/useProducts';
+import { uploadImage } from '../../lib/uploadImage';
 
 export default function Admin() {
-  const [products, setProducts] = useState({
-    slane: [
-      {
-        id: 1,
-        name: "Obložené chlebíčky",
-        description: "Tradiční chlebíčky na různé styly.",
-        price: "od 35 Kč/kus",
-        priceNum: 35,
-        image: "/chlebicky.jpeg"
-      },
-      // ...všechny produkty zkopírujte z nabidka/page.js
-    ],
-    sladke: []
-  });
-
+  const { products, loading, addProduct, updateProduct, deleteProduct } = useProducts();
   const [editingProduct, setEditingProduct] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const updateProduct = (id, updatedData) => {
-    setProducts(prev => ({
-      ...prev,
-      slane: prev.slane.map(product => 
-        product.id === id ? { ...product, ...updatedData } : product
-      )
-    }));
-  };
-
-  const deleteProduct = (id) => {
-    if (confirm('Opravdu smazat tento produkt?')) {
-      setProducts(prev => ({
-        ...prev,
-        slane: prev.slane.filter(product => product.id !== id)
-      }));
+  const handleUpdateProduct = async (id, updatedData) => {
+    const result = await updateProduct(id, updatedData);
+    if (result.success) {
+      setEditingProduct(null);
+      alert('Produkt byl úspěšně aktualizován!');
+    } else {
+      alert('Chyba při aktualizaci: ' + result.error);
     }
   };
 
-  const addProduct = (newProduct) => {
-    const newId = Math.max(...products.slane.map(p => p.id)) + 1;
-    setProducts(prev => ({
-      ...prev,
-      slane: [...prev.slane, { ...newProduct, id: newId }]
-    }));
-    setShowAddForm(false);
+  const handleDeleteProduct = async (id) => {
+    if (confirm('Opravdu smazat tento produkt?')) {
+      const result = await deleteProduct(id);
+      if (result.success) {
+        alert('Produkt byl úspěšně smazán!');
+      } else {
+        alert('Chyba při mazání: ' + result.error);
+      }
+    }
   };
+
+  const handleAddProduct = async (newProduct) => {
+    const result = await addProduct(newProduct);
+    if (result.success) {
+      setShowAddForm(false);
+      alert('Produkt byl úspěšně přidán!');
+    } else {
+      alert('Chyba při přidávání: ' + result.error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="admin-container">
+        <div style={{ textAlign: 'center', padding: '4rem' }}>
+          <h2>Načítání...</h2>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-container">
@@ -67,17 +69,19 @@ export default function Admin() {
           >
             ➕ Přidat nový produkt
           </button>
+          <p>📊 Celkem produktů: {products.slane.length + products.sladke.length}</p>
         </div>
 
         <div className="products-grid">
-          {products.slane.map(product => (
+          {[...products.slane, ...products.sladke].map(product => (
             <div key={product.id} className="admin-product-card">
               <div className="product-image">
                 <Image 
-                  src={product.image} 
+                  src={product.image || '/placeholder.jpeg'} 
                   alt={product.name}
                   width={200}
                   height={150}
+                  style={{ objectFit: 'cover', borderRadius: '8px' }}
                 />
               </div>
               
@@ -85,6 +89,7 @@ export default function Admin() {
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
                 <p><strong>{product.price}</strong></p>
+                <small>Kategorie: {product.category}</small>
               </div>
 
               <div className="product-actions">
@@ -95,7 +100,7 @@ export default function Admin() {
                   ✏️ Upravit
                 </button>
                 <button 
-                  onClick={() => deleteProduct(product.id)}
+                  onClick={() => handleDeleteProduct(product.id)}
                   className="delete-btn"
                 >
                   🗑️ Smazat
@@ -112,7 +117,7 @@ export default function Admin() {
               <h3>Upravit produkt</h3>
               <EditProductForm 
                 product={editingProduct}
-                onSave={updateProduct}
+                onSave={handleUpdateProduct}
                 onCancel={() => setEditingProduct(null)}
               />
             </div>
@@ -125,7 +130,7 @@ export default function Admin() {
             <div className="add-modal">
               <h3>Přidat nový produkt</h3>
               <AddProductForm 
-                onSave={addProduct}
+                onSave={handleAddProduct}
                 onCancel={() => setShowAddForm(false)}
               />
             </div>
@@ -136,20 +141,58 @@ export default function Admin() {
   );
 }
 
-// Komponenta pro editaci
+// Komponenta pro editaci s upload obrázku
 function EditProductForm({ product, onSave, onCancel }) {
   const [formData, setFormData] = useState({
     name: product.name,
     description: product.description,
     price: product.price,
     priceNum: product.priceNum,
-    image: product.image
+    image: product.image,
+    category: product.category || 'slane'
   });
+  const [uploading, setUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(product.image);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Kontrola typu souboru
+    if (!file.type.startsWith('image/')) {
+      alert('Prosím vyberte obrázek!');
+      return;
+    }
+
+    // Kontrola velikosti (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Obrázek je příliš velký! Maximální velikost je 5MB.');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      
+      // Preview
+      const reader = new FileReader();
+      reader.onload = (e) => setImagePreview(e.target.result);
+      reader.readAsDataURL(file);
+
+      // Upload do Firebase Storage
+      const imageUrl = await uploadImage(file, 'products');
+      setFormData({ ...formData, image: imageUrl });
+      
+    } catch (error) {
+      console.error('Chyba při nahrávání:', error);
+      alert('Chyba při nahrávání obrázku!');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSave(product.id, formData);
-    onCancel();
   };
 
   return (
@@ -184,35 +227,97 @@ function EditProductForm({ product, onSave, onCancel }) {
         onChange={(e) => setFormData({...formData, priceNum: parseInt(e.target.value)})}
         required
       />
-      
-      <input
-        type="text"
-        placeholder="Cesta k obrázku (např. /produkt.jpeg)"
-        value={formData.image}
-        onChange={(e) => setFormData({...formData, image: e.target.value})}
+
+      {/* ✅ UPLOAD OBRÁZKU */}
+      <div className="image-upload-section">
+        <label>Obrázek produktu:</label>
+        
+        {imagePreview && (
+          <div className="image-preview">
+            <img src={imagePreview} alt="Preview" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px' }} />
+          </div>
+        )}
+        
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          disabled={uploading}
+        />
+        
+        {uploading && <p>📤 Nahrávání obrázku...</p>}
+      </div>
+
+      <select
+        value={formData.category}
+        onChange={(e) => setFormData({...formData, category: e.target.value})}
         required
-      />
+      >
+        <option value="slane">Slané</option>
+        <option value="sladke">Sladké</option>
+      </select>
 
       <div className="form-buttons">
-        <button type="submit">💾 Uložit</button>
+        <button type="submit" disabled={uploading}>
+          {uploading ? '📤 Ukládání...' : '💾 Uložit'}
+        </button>
         <button type="button" onClick={onCancel}>❌ Zrušit</button>
       </div>
     </form>
   );
 }
 
-// Komponenta pro přidání
+// Komponenta pro přidání s upload obrázku
 function AddProductForm({ onSave, onCancel }) {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     price: '',
     priceNum: 0,
-    image: ''
+    image: '',
+    category: 'slane'
   });
+  const [uploading, setUploading] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Prosím vyberte obrázek!');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Obrázek je příliš velký! Maximální velikost je 5MB.');
+      return;
+    }
+
+    try {
+      setUploading(true);
+      
+      const reader = new FileReader();
+      reader.onload = (e) => setImagePreview(e.target.result);
+      reader.readAsDataURL(file);
+
+      const imageUrl = await uploadImage(file, 'products');
+      setFormData({ ...formData, image: imageUrl });
+      
+    } catch (error) {
+      console.error('Chyba při nahrávání:', error);
+      alert('Chyba při nahrávání obrázku!');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData.image) {
+      alert('Prosím nahrajte obrázek!');
+      return;
+    }
     onSave(formData);
   };
 
@@ -248,17 +353,41 @@ function AddProductForm({ onSave, onCancel }) {
         onChange={(e) => setFormData({...formData, priceNum: parseInt(e.target.value)})}
         required
       />
-      
-      <input
-        type="text"
-        placeholder="Cesta k obrázku (např. /produkt.jpeg)"
-        value={formData.image}
-        onChange={(e) => setFormData({...formData, image: e.target.value})}
+
+      {/* ✅ UPLOAD OBRÁZKU */}
+      <div className="image-upload-section">
+        <label>Obrázek produktu: *</label>
+        
+        {imagePreview && (
+          <div className="image-preview">
+            <img src={imagePreview} alt="Preview" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px' }} />
+          </div>
+        )}
+        
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          disabled={uploading}
+          required
+        />
+        
+        {uploading && <p>📤 Nahrávání obrázku...</p>}
+      </div>
+
+      <select
+        value={formData.category}
+        onChange={(e) => setFormData({...formData, category: e.target.value})}
         required
-      />
+      >
+        <option value="slane">Slané</option>
+        <option value="sladke">Sladké</option>
+      </select>
 
       <div className="form-buttons">
-        <button type="submit">➕ Přidat</button>
+        <button type="submit" disabled={uploading || !formData.image}>
+          {uploading ? '📤 Nahrávání...' : '➕ Přidat'}
+        </button>
         <button type="button" onClick={onCancel}>❌ Zrušit</button>
       </div>
     </form>
