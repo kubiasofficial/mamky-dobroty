@@ -14,7 +14,7 @@ export default function Home() {
       name: "Chlebíčky sešité",
       description: "Tradiční chlebíčky s různými náplněmi",
       price: "od 35 Kč/kus",
-      image: "/chlebicky.jpeg",
+      image: "/chlebicky.jpeg", // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -22,7 +22,7 @@ export default function Home() {
       name: "Obložená mísa",
       description: "Pestré obložené mísy pro různé příležitosti",
       price: "od 350 Kč",
-      image: "/misa.jpeg",
+      image: "/misa.jpeg", // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -30,7 +30,7 @@ export default function Home() {
       name: "Obložené croissanty",
       description: "Křupavé croissanty s lahodnou náplní",
       price: "od 55 Kč/kus",
-      image: "/croissanty.jpeg",
+      image: "/croissanty.jpeg", // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -38,7 +38,7 @@ export default function Home() {
       name: "Slaný dort",
       description: "Speciální slaný dort pro větší akce",
       price: "od 480 Kč",
-      image: "/slanydort.jpeg",
+      image: "/slanydort.jpeg", // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -46,7 +46,7 @@ export default function Home() {
       name: "Obložené bagety",
       description: "Čerstvé bagety s chutnou náplní",
       price: "od 55 Kč/kus",
-      image: "/bagety.jpeg",
+      image: "/bagety.jpeg", // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -54,7 +54,7 @@ export default function Home() {
       name: "Vajíčka trochu jinak",
       description: "Kreativní úprava vajíček podle našich receptů",
       price: "60 Kč/kus",
-      image: "/vajicka.jpeg",
+      image: "/vajicka.jpeg", // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -62,7 +62,7 @@ export default function Home() {
       name: "Vaječná-Tlačenka",
       description: "Domácí vaječná tlačenka podle tradiční receptury",
       price: "od 350 Kč",
-      image: "/vajec-tlacenka.jpeg",
+      image: "/vajec-tlacenka.jpeg", // ✅ OPRAVENO
       category: "slane"
     },
     {
@@ -70,7 +70,7 @@ export default function Home() {
       name: "Masový Sulc",
       description: "Tradiční masový sulc z kvalitních surovin",
       price: "od 400 Kč",
-      image: "/masovy-sulc.jpeg",
+      image: "/masovy-sulc.jpeg", // ✅ OPRAVENO
       category: "slane"
     }
   ];
