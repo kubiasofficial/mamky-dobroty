@@ -158,33 +158,34 @@ function EditProductForm({ product, onSave, onCancel }) {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Kontrola typu souboru
+    // Kontroly
     if (!file.type.startsWith('image/')) {
       alert('Prosím vyberte obrázek!');
       return;
     }
 
-    // Kontrola velikosti (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Obrázek je příliš velký! Maximální velikost je 5MB.');
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Obrázek je příliš velký! Maximální velikost je 2MB.');
       return;
     }
 
     try {
       setUploading(true);
       
-      // Preview
+      // Okamžitě zobrazit náhled
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
 
-      // Upload do Firebase Storage
-      const imageUrl = await uploadImage(file, 'products');
-      setFormData({ ...formData, image: imageUrl });
+      // "Upload" pomocí base64
+      const base64Url = await uploadImage(file, 'products');
+      setFormData({ ...formData, image: base64Url });
+      
+      console.log('✅ Obrázek připraven!');
       
     } catch (error) {
-      console.error('Chyba při nahrávání:', error);
-      alert('Chyba při nahrávání obrázku!');
+      console.error('Chyba při zpracování:', error);
+      alert('Chyba při zpracování obrázku: ' + error.message);
     } finally {
       setUploading(false);
     }
@@ -228,24 +229,42 @@ function EditProductForm({ product, onSave, onCancel }) {
         required
       />
 
-      {/* ✅ UPLOAD OBRÁZKU */}
+      {/* ✅ UPLOAD OBRÁZKU - VYLEPŠENÁ VERZE */}
       <div className="image-upload-section">
-        <label>Obrázek produktu:</label>
+        <label>Obrázek produktu: {!imagePreview && '*'}</label>
         
         {imagePreview && (
           <div className="image-preview">
-            <img src={imagePreview} alt="Preview" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px' }} />
+            <img src={imagePreview} alt="Preview" />
           </div>
         )}
         
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          disabled={uploading}
-        />
+        <div className="file-input-wrapper">
+          <label 
+            htmlFor="imageUploadEdit" 
+            className={`file-input-label ${uploading ? 'disabled' : ''}`}
+          >
+            {uploading ? '📤 Zpracovávám...' : '📷 Vybrat obrázek'}
+          </label>
+          <input
+            id="imageUploadEdit"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            disabled={uploading}
+            style={{ display: 'none' }}
+          />
+        </div>
         
-        {uploading && <p>📤 Nahrávání obrázku...</p>}
+        <div className="file-info">
+          Max. velikost: 2MB • Formáty: JPG, PNG, GIF
+        </div>
+        
+        {uploading && (
+          <div className="upload-progress">
+            📤 Zpracovávám obrázek...
+          </div>
+        )}
       </div>
 
       <select
@@ -289,8 +308,8 @@ function AddProductForm({ onSave, onCancel }) {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert('Obrázek je příliš velký! Maximální velikost je 5MB.');
+    if (file.size > 2 * 1024 * 1024) {
+      alert('Obrázek je příliš velký! Maximální velikost je 2MB.');
       return;
     }
 
@@ -354,25 +373,43 @@ function AddProductForm({ onSave, onCancel }) {
         required
       />
 
-      {/* ✅ UPLOAD OBRÁZKU */}
+      {/* ✅ UPLOAD OBRÁZKU - VYLEPŠENÁ VERZE */}
       <div className="image-upload-section">
-        <label>Obrázek produktu: *</label>
+        <label>Obrázek produktu: {!imagePreview && '*'}</label>
         
         {imagePreview && (
           <div className="image-preview">
-            <img src={imagePreview} alt="Preview" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '8px' }} />
+            <img src={imagePreview} alt="Preview" />
           </div>
         )}
         
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          disabled={uploading}
-          required
-        />
+        <div className="file-input-wrapper">
+          <label 
+            htmlFor="imageUploadAdd" 
+            className={`file-input-label ${uploading ? 'disabled' : ''}`}
+          >
+            {uploading ? '📤 Zpracovávám...' : '📷 Vybrat obrázek'}
+          </label>
+          <input
+            id="imageUploadAdd"
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            disabled={uploading}
+            style={{ display: 'none' }}
+            required
+          />
+        </div>
         
-        {uploading && <p>📤 Nahrávání obrázku...</p>}
+        <div className="file-info">
+          Max. velikost: 2MB • Formáty: JPG, PNG, GIF
+        </div>
+        
+        {uploading && (
+          <div className="upload-progress">
+            📤 Zpracovávám obrázek...
+          </div>
+        )}
       </div>
 
       <select
