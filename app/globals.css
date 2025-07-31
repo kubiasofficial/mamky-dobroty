@@ -1311,3 +1311,67 @@ main {
   text-align: center;
   font-style: italic;
 }
+
+/* ✅ NOTIFIKACE STYLY */
+.notification-success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #28a745;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+.notification-warning {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #ffc107;
+  color: black;
+  padding: 15px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Discord embed styling */
+.discord-preview {
+  background: #2f3136;
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #28a745;
+  margin: 10px 0;
+  font-family: 'Whitney', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.discord-embed-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #00d166;
+}
+
+.discord-embed-field {
+  margin: 8px 0;
+}
+
+.discord-embed-field-name {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
