@@ -7,86 +7,109 @@ import { useProducts } from '../../lib/useProducts';
 
 export default function Nabidka() {
   const { products, loading } = useProducts();
-  const [showModal, setShowModal] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(null);
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
-  const [showAdminModal, setShowAdminModal] = useState(false);
-  const [adminPin, setAdminPin] = useState('');
+  const [showOrderForm, setShowOrderForm] = useState(false);
 
-  // Načtení košíku z localStorage při načtení komponenty
+  // Načíst košík z localStorage při načtení stránky
   useEffect(() => {
-    const savedCart = localStorage.getItem('mamky-cart');
+    const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (error) {
-        console.error('Chyba při načítání košíku:', error);
-      }
+      setCart(JSON.parse(savedCart));
     }
   }, []);
 
-  // Uložení košíku do localStorage při každé změně
+  // Uložit košík do localStorage při každé změně
   useEffect(() => {
-    localStorage.setItem('mamky-cart', JSON.stringify(cart));
+    localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
-    setShowModal(false);
-  };
-
-  const resetSelection = () => {
-    setShowModal(true);
-    setSelectedCategory(null);
-  };
-
+  // ✅ OPRAVENÁ FUNKCE - používá Firebase ID
   const addToCart = (product) => {
-    const existingItem = cart.find(item => item.id === product.id);
-    
-    if (existingItem) {
-      setCart(cart.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, { ...product, quantity: 1 }]);
-    }
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.id === product.id);
+      
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      } else {
+        return [...prevCart, { 
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          priceNum: product.priceNum,
+          image: product.image,
+          quantity: 1 
+        }];
+      }
+    });
   };
 
+  // ✅ OPRAVENÁ FUNKCE - používá Firebase ID
   const removeFromCart = (productId) => {
-    setCart(cart.filter(item => item.id !== productId));
+    setCart(prevCart => prevCart.filter(item => item.id !== productId));
   };
 
+  // ✅ OPRAVENÁ FUNKCE - používá Firebase ID
   const updateQuantity = (productId, newQuantity) => {
-    if (newQuantity === 0) {
+    if (newQuantity <= 0) {
       removeFromCart(productId);
-    } else {
-      setCart(cart.map(item => 
-        item.id === productId 
+      return;
+    }
+    
+    setCart(prevCart =>
+      prevCart.map(item =>
+        item.id === productId
           ? { ...item, quantity: newQuantity }
           : item
-      ));
-    }
+      )
+    );
   };
 
-  const clearCart = () => {
-    setCart([]);
-    localStorage.removeItem('mamky-cart');
+  const getTotalPrice = () => {
+    return cart.reduce((total, item) => total + (item.priceNum * item.quantity), 0);
   };
 
   const getTotalItems = () => {
     return cart.reduce((total, item) => total + item.quantity, 0);
   };
 
-  const handleAdminLogin = () => {
-    if (adminPin === '2811') {
-      window.location.href = '/admin';
-    } else {
-      alert('Špatný PIN!');
-      setAdminPin('');
-    }
+  const handleOrderSubmit = (orderData) => {
+    const cartItems = cart.map(item => 
+      `${item.name} - ${item.quantity}x (${item.price})`
+    ).join('\n');
+
+    const orderMessage = `
+NOVÁ OBJEDNÁVKA:
+
+${orderData.name}
+${orderData.phone}
+${orderData.email}
+
+PRODUKTY:
+${cartItems}
+
+CELKOVÁ CENA: ${getTotalPrice()} Kč
+
+POZNÁMKA:
+${orderData.note || 'Žádná poznámka'}
+    `;
+
+    // WhatsApp link
+    const whatsappUrl = `https://wa.me/420775264642?text=${encodeURIComponent(orderMessage)}`;
+    
+    // Otevřít WhatsApp
+    window.open(whatsappUrl, '_blank');
+    
+    // Vyčistit košík
+    setCart([]);
+    setShowOrderForm(false);
+    setShowCart(false);
+    
+    alert('Objednávka byla odeslána! Budete přesměrováni na WhatsApp.');
   };
 
   if (loading) {
@@ -109,178 +132,252 @@ export default function Nabidka() {
             <Link href="/nabidka" className="nav-link active">Nabídka</Link>
             <Link href="/kontakt" className="nav-link">Kontakt</Link>
             
+            {/* ✅ KOŠÍK TLAČÍTKO */}
             <button 
+              className="cart-btn" 
               onClick={() => setShowCart(true)}
-              className="cart-btn"
             >
               🛒 Košík ({getTotalItems()})
-            </button>
-
-            {/* ✅ ADMIN TLAČÍTKO */}
-            <button 
-              onClick={() => setShowAdminModal(true)}
-              className="admin-btn"
-              title="Správa webu"
-            >
-              🔑
             </button>
           </nav>
         </div>
       </header>
 
-      {/* ✅ ADMIN MODAL */}
-      {showAdminModal && (
-        <div className="modal-overlay">
-          <div className="admin-modal">
-            <h3>Příhlášení správce webu</h3>
-            <input
-              type="password"
-              placeholder="Zadejte PIN"
-              value={adminPin}
-              onChange={(e) => setAdminPin(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
-            />
-            <div className="admin-buttons">
-              <button onClick={handleAdminLogin}>Přihlásit</button>
-              <button onClick={() => {
-                setShowAdminModal(false);
-                setAdminPin('');
-              }}>Zrušit</button>
+      <main className="main-content">
+        <section className="products-section">
+          <h2>Naše nabídka</h2>
+          
+          {/* SLANÉ PRODUKTY */}
+          <div className="category-section">
+            <h3>🧄 Slané dobroty</h3>
+            <div className="products-grid">
+              {products.slane.map(product => (
+                <div key={product.id} className="product-card">
+                  <div className="product-image">
+                    <Image 
+                      src={product.image || '/placeholder.jpeg'} 
+                      alt={product.name}
+                      width={300}
+                      height={200}
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div className="product-content">
+                    <h4>{product.name}</h4>
+                    <p>{product.description}</p>
+                    <div className="product-footer">
+                      <span className="price">{product.price}</span>
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="add-to-cart-btn"
+                      >
+                        Přidat do košíku
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      )}
 
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>Vyberte kategorii</h2>
-            <div className="category-buttons">
-              <button 
-                onClick={() => handleCategorySelect('slane')}
-                className="category-btn slane"
-              >
-                🧀 Slané
-              </button>
-              <button 
-                onClick={() => handleCategorySelect('sladke')}
-                className="category-btn sladke"
-              >
-                🍰 Sladké
-              </button>
+          {/* SLADKÉ PRODUKTY */}
+          <div className="category-section">
+            <h3>🍰 Sladké dobroty</h3>
+            <div className="products-grid">
+              {products.sladke.map(product => (
+                <div key={product.id} className="product-card">
+                  <div className="product-image">
+                    <Image 
+                      src={product.image || '/placeholder.jpeg'} 
+                      alt={product.name}
+                      width={300}
+                      height={200}
+                      style={{ objectFit: 'cover' }}
+                    />
+                  </div>
+                  <div className="product-content">
+                    <h4>{product.name}</h4>
+                    <p>{product.description}</p>
+                    <div className="product-footer">
+                      <span className="price">{product.price}</span>
+                      <button 
+                        onClick={() => addToCart(product)}
+                        className="add-to-cart-btn"
+                      >
+                        Přidat do košíku
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      )}
+        </section>
 
-      {showCart && (
-        <div className="modal-overlay">
-          <div className="cart-modal">
-            <div className="cart-header">
-              <h2>Váš košík</h2>
-              <button 
-                onClick={() => setShowCart(false)}
-                className="close-btn"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="cart-content">
-              {cart.length === 0 ? (
-                <p>Košík je prázdný</p>
-              ) : (
-                <>
-                  {cart.map(item => (
-                    <div key={item.id} className="cart-item">
-                      <div className="cart-item-info">
-                        <h4>{item.name}</h4>
-                        <p>{item.price}</p>
-                      </div>
-                      <div className="cart-item-controls">
+        {/* KOŠÍK MODAL */}
+        {showCart && (
+          <div className="modal-overlay">
+            <div className="cart-modal">
+              <div className="cart-header">
+                <h3>🛒 Váš košík</h3>
+                <button onClick={() => setShowCart(false)}>✕</button>
+              </div>
+              
+              <div className="cart-content">
+                {cart.length === 0 ? (
+                  <p>Košík je prázdný</p>
+                ) : (
+                  <>
+                    {cart.map(item => (
+                      <div key={item.id} className="cart-item">
+                        <div className="cart-item-image">
+                          <Image 
+                            src={item.image || '/placeholder.jpeg'} 
+                            alt={item.name}
+                            width={80}
+                            height={60}
+                            style={{ objectFit: 'cover', borderRadius: '8px' }}
+                          />
+                        </div>
+                        <div className="cart-item-details">
+                          <h4>{item.name}</h4>
+                          <p>{item.price}</p>
+                        </div>
+                        <div className="cart-item-quantity">
+                          <button onClick={() => updateQuantity(item.id, item.quantity - 1)}>-</button>
+                          <span>{item.quantity}</span>
+                          <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>+</button>
+                        </div>
+                        <div className="cart-item-total">
+                          {item.priceNum * item.quantity} Kč
+                        </div>
                         <button 
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="quantity-btn"
-                        >
-                          -
-                        </button>
-                        <span>{item.quantity}</span>
-                        <button 
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="quantity-btn"
-                        >
-                          +
-                        </button>
-                        <button 
+                          className="remove-item"
                           onClick={() => removeFromCart(item.id)}
-                          className="remove-btn"
                         >
                           🗑️
                         </button>
                       </div>
+                    ))}
+                    
+                    <div className="cart-total">
+                      <strong>Celkem: {getTotalPrice()} Kč</strong>
                     </div>
-                  ))}
-                  
-                  <div className="cart-footer">
-                    <p><strong>Celkem položek: {getTotalItems()}</strong></p>
                     
                     <div className="cart-actions">
                       <button 
-                        onClick={clearCart}
-                        className="clear-cart-btn"
+                        className="order-btn"
+                        onClick={() => {
+                          setShowCart(false);
+                          setShowOrderForm(true);
+                        }}
                       >
-                        Vymazat košík
+                        Objednat
                       </button>
-                      
-                      <Link href={`/objednavka?cart=${encodeURIComponent(JSON.stringify(cart))}`}>
-                        <button className="order-btn">
-                          Dokončit poptávku
-                        </button>
-                      </Link>
+                      <button 
+                        className="clear-cart-btn"
+                        onClick={() => setCart([])}
+                      >
+                        Vyčistit košík
+                      </button>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <main>
-        {selectedCategory && (
-          <section className="menu">
-            <div className="menu-header">
-              <h2>{selectedCategory === 'slane' ? 'Slané dobroty' : 'Sladké dobroty'}</h2>
-              <button onClick={resetSelection} className="back-btn">
-                ← Změnit kategorii
-              </button>
+        {/* OBJEDNÁVKOVÝ FORMULÁŘ */}
+        {showOrderForm && (
+          <div className="modal-overlay">
+            <div className="order-modal">
+              <OrderForm 
+                cart={cart}
+                onSubmit={handleOrderSubmit}
+                onCancel={() => setShowOrderForm(false)}
+                totalPrice={getTotalPrice()}
+              />
             </div>
-            
-            {selectedCategory === 'sladke' && products.sladke.length === 0 ? (
-              <div className="empty-category">
-                <p>Sladké dobroty budou brzy k dispozici! 🍰</p>
-              </div>
-            ) : (
-              <div className="menu-grid">
-                {products[selectedCategory].map(product => (
-                  <div key={product.id} className="menu-item">
-                    <Image src={product.image} alt={product.name} width={300} height={200} />
-                    <h3>{product.name}</h3>
-                    <p>{product.description}</p>
-                    <p><strong>{product.price}</strong></p>
-                    <button 
-                      onClick={() => addToCart(product)}
-                      className="add-to-cart-btn"
-                    >
-                      Přidat do košíku
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
+          </div>
         )}
       </main>
     </>
+  );
+}
+
+// Komponenta objednávkového formuláře zůstává stejná
+function OrderForm({ cart, onSubmit, onCancel, totalPrice }) {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    note: ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="order-form">
+      <h3>Dokončit objednávku</h3>
+      
+      <div className="order-summary">
+        <h4>Souhrn objednávky:</h4>
+        {cart.map(item => (
+          <div key={item.id} className="order-item">
+            <span>{item.name} - {item.quantity}x</span>
+            <span>{item.priceNum * item.quantity} Kč</span>
+          </div>
+        ))}
+        <div className="order-total">
+          <strong>Celkem: {totalPrice} Kč</strong>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <input
+          type="text"
+          placeholder="Jméno a příjmení *"
+          value={formData.name}
+          onChange={(e) => setFormData({...formData, name: e.target.value})}
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <input
+          type="tel"
+          placeholder="Telefon *"
+          value={formData.phone}
+          onChange={(e) => setFormData({...formData, phone: e.target.value})}
+          required
+        />
+      </div>
+
+      <div className="form-group">
+        <input
+          type="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={(e) => setFormData({...formData, email: e.target.value})}
+        />
+      </div>
+
+      <div className="form-group">
+        <textarea
+          placeholder="Poznámka k objednávce"
+          value={formData.note}
+          onChange={(e) => setFormData({...formData, note: e.target.value})}
+        />
+      </div>
+
+      <div className="form-buttons">
+        <button type="submit">Odeslat objednávku</button>
+        <button type="button" onClick={onCancel}>Zrušit</button>
+      </div>
+    </form>
   );
 }
