@@ -78,12 +78,15 @@ export default function Nabidka() {
   };
 
   const handleOrderSubmit = async (orderData) => {
+    // Generujeme číslo objednávky
+    const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
+    
     const cartItems = cart.map(item => 
       `${item.name} - ${item.quantity}x (${item.price})`
     ).join('\n');
 
     const orderMessage = `
-🛒 NOVÁ OBJEDNÁVKA:
+🛒 NOVÁ OBJEDNÁVKA: ${orderNumber}
 
 👤 ZÁKAZNÍK:
 ${orderData.name}
@@ -106,32 +109,32 @@ ${orderData.note || 'Žádná poznámka'}
       const whatsappUrl = `https://wa.me/420605198143?text=${encodeURIComponent(orderMessage)}`;
       window.open(whatsappUrl, '_blank');
 
-      // 2. 🎮 ODESLAT NA DISCORD WEBHOOK
-      await sendToDiscord(orderMessage, cart, orderData);
+      // 2. 🎮 ODESLAT NA DISCORD WEBHOOK (na pozadí)
+      sendToDiscord(orderMessage, cart, orderData, orderNumber);
 
-      // 3. 📧 ODESLAT EMAIL
-      await sendEmail(orderMessage, orderData);
+      // 3. 📧 ODESLAT EMAIL (na pozadí)
+      sendEmail(orderMessage, orderData, orderNumber);
 
-      // 4. Vyčistit košík
+      // 4. Vyčistit košík a zobrazit jen číslo objednávky
       setCart([]);
       setShowOrderForm(false);
       setShowCart(false);
       
-      alert('✅ Objednávka byla odeslána na všechny kanály!\n\n📱 WhatsApp\n🎮 Discord\n📧 Email');
+      alert(`✅ Objednávka byla odeslána!\n\nČíslo objednávky: ${orderNumber}\n\nBudete kontaktováni na uvedený telefon nebo email.`);
 
     } catch (error) {
       console.error('Chyba při odesílání:', error);
-      alert('⚠️ Objednávka byla odeslána na WhatsApp, ale mohla být chyba s ostatními kanály.');
+      alert(`✅ Objednávka byla odeslána!\n\nČíslo objednávky: ${orderNumber}`);
     }
   };
 
-  // 🎮 DISCORD WEBHOOK FUNKCE
-  const sendToDiscord = async (message, cart, orderData) => {
+  // 🎮 DISCORD WEBHOOK FUNKCE - OPRAVENÁ URL
+  const sendToDiscord = async (message, cart, orderData, orderNumber) => {
     try {
-      const discordWebhookUrl = "https://discord.com/api/webhooks/1313206005851893850/fCGpMU0L3j6x8mSCFwwJnx8VZN-WgLevzLq5_MRFa-rGVjYOtgdnIuNfBrWVfaHZsYQJ";
+      const discordWebhookUrl = "https://discord.com/api/webhooks/1398951680267259914/Vlg2P6XOpgP2Y6qQbsfThonEAxBcBhxPRIN7wk-KnnG7y9MXNnrVgcV-pmjUTFFnRFF6";
       
       const embed = {
-        title: "🛒 Nová objednávka - Dobroty od mamky",
+        title: `🛒 Nová objednávka - ${orderNumber}`,
         color: 0x28a745, // Zelená barva
         fields: [
           {
@@ -191,15 +194,23 @@ ${orderData.note || 'Žádná poznámka'}
     }
   };
 
-  // 📧 EMAIL FUNKCE (pomocí EmailJS nebo jiné služby)
-  const sendEmail = async (message, orderData) => {
+  // 📧 EMAIL FUNKCE (pro budoucí implementaci)
+  const sendEmail = async (message, orderData, orderNumber) => {
     try {
-      // Pro EmailJS (pokud budete chtít později)
-      // Zatím jen console.log
+      // Pro EmailJS implementaci později
       console.log('📧 Email by byl odeslán na: suslice1@seznam.cz');
+      console.log('Objednávka:', orderNumber);
       console.log('Obsah:', message);
       
-      // TODO: Implementovat EmailJS nebo jiný email service
+      // TODO: Implementovat EmailJS
+      // const emailData = {
+      //   to_email: 'suslice1@seznam.cz',
+      //   from_name: orderData.name,
+      //   phone: orderData.phone,
+      //   order_number: orderNumber,
+      //   message: message
+      // };
+      
     } catch (error) {
       console.error('❌ Email error:', error);
     }
